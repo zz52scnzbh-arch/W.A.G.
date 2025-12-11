@@ -4,6 +4,18 @@
 
 Formålet er at forudsige dagens antal gæster på Kroen Endelave og understøtte beslutningstagning om bemanding, råvarer og åbningstider.
 
+## 📸 UI Preview
+
+**Email Notification:**
+
+![Email Notification](https://github.com/user-attachments/assets/1144cd0a-b929-4111-91a7-9e53f0de0c1f)
+
+**API Responses:**
+
+![API Responses](https://github.com/user-attachments/assets/5723bfa4-5966-4101-a0af-2f3d07c2e183)
+
+[📖 View Full UI Documentation](docs/UI-DOCUMENTATION.md)
+
 ## 🎯 Features
 
 - ✅ **AI-Powered Predictions**: Uses OpenAI GPT-4 to predict daily guest numbers

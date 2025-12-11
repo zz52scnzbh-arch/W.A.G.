@@ -63,11 +63,32 @@ class EmailService {
   }
 
   /**
+   * Escape HTML special characters to prevent XSS
+   */
+  escapeHtml(text) {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
+  /**
    * Create HTML email content
    */
   createEmailHTML(forecastData) {
     const { date, predicted_guests, confidence, explanation, suggestions } = forecastData;
     const confidencePercent = Math.round(confidence * 100);
+    
+    // Escape all user-generated content
+    const safeDate = this.escapeHtml(String(date));
+    const safeExplanation = this.escapeHtml(String(explanation));
+    const safeStaffing = this.escapeHtml(String(suggestions.staffing));
+    const safeOpenHours = this.escapeHtml(String(suggestions.open_hours));
+    const safeIngredients = suggestions.ingredients.map(item => this.escapeHtml(String(item)));
     
     return `
 <!DOCTYPE html>
@@ -90,7 +111,7 @@ class EmailService {
   <div class="container">
     <div class="header">
       <h1>🍽️ Kroen Endelave - Gæsteprognose</h1>
-      <p>Dato: ${date}</p>
+      <p>Dato: ${safeDate}</p>
     </div>
     
     <div class="content">
@@ -98,22 +119,22 @@ class EmailService {
         <h2>Forventet antal gæster</h2>
         <div class="metric">${predicted_guests} gæster</div>
         <p class="confidence">Sikkerhed: ${confidencePercent}%</p>
-        <p><strong>Forklaring:</strong> ${explanation}</p>
+        <p><strong>Forklaring:</strong> ${safeExplanation}</p>
       </div>
       
       <div class="suggestions-box">
         <h3>💡 Anbefalinger</h3>
         
         <h4>👥 Bemanding</h4>
-        <p>${suggestions.staffing}</p>
+        <p>${safeStaffing}</p>
         
         <h4>🛒 Indkøbsliste</h4>
         <ul>
-          ${suggestions.ingredients.map(item => `<li>${item}</li>`).join('')}
+          ${safeIngredients.map(item => `<li>${item}</li>`).join('')}
         </ul>
         
         <h4>🕐 Åbningstider</h4>
-        <p>${suggestions.open_hours}</p>
+        <p>${safeOpenHours}</p>
       </div>
     </div>
     

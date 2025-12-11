@@ -188,7 +188,7 @@ class ForecastService {
             date: forecast.date,
             predicted_guests: forecast.predicted_guests,
             actual_guests: actualLog ? actualLog.actual_guests : null,
-            accuracy: actualLog 
+            accuracy: actualLog && actualLog.actual_guests > 0
               ? Math.round((1 - Math.abs(forecast.predicted_guests - actualLog.actual_guests) / actualLog.actual_guests) * 100)
               : null,
             confidence: forecast.confidence,
